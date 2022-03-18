@@ -43,10 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Network\Layer.cs" />
+    <Compile Include="Libraries\Activation.cs" />
+    <Compile Include="Libraries\Derivatives.cs" />
+    <Compile Include="Libraries\LayerVs.cs" />
+    <Compile Include="Network\Neuron.cs" />
+    <Compile Include="Network\NN.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
