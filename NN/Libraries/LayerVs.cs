@@ -14,15 +14,31 @@ namespace NN.Libraries
         internal double bias;
         internal List<double[]> weigths;
 
+        public LayerVs(int neuronCount, int prevLength, double bias = 1)
+        {
+            this.bias = bias;
+            weigths = new List<double[]>();
+            for (int i = 0; i < neuronCount; i++)
+                weigths.Add(Layer.GetRandomWeigths(prevLength));
+        }
+
         public LayerVs(List<double[]> weigths, double bias = 0)
         {
             this.bias = bias;
             if (weigths == null)
-            {
-                weigths = new List<double[]>();
-            }
+                this.weigths = new List<double[]>();
             else
                 this.weigths = weigths;
+        }
+
+        internal void AddNeuron(double[] weigths, double biasAddition = 0)
+        {
+            if (weigths.Length != PrevLayerLength)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            this.weigths.Add(weigths);
+            bias += biasAddition;
         }
 
         internal void SubtractVs(LayerVs layerVs)
