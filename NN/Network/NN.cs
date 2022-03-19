@@ -9,6 +9,7 @@ namespace NN
 {
     public class NN
     {
+        public int Length => layers.Count;
         public int inputLength => layers.Count > 0 ? layers[0].PrevLayerLength : 0;
         internal List<Layer> layers;
         Activation.ActivationFunctions activationFunction;
@@ -56,9 +57,16 @@ namespace NN
             return outputs;
         }
 
-        public List<LayerVs> GetGradients(double[] input, double[] costs)
+        public List<LayerVs> GetGrads(double[] input, double[] costs)
         {
-
+            List<LayerVs> grads = new List<LayerVs>();
+            List<double[]> layerOuts = ExecuteNetwork(input, out _);
+            for (int layerI = Length - 1; layerI >= 0; layerI--)
+            {
+                layers[layerI].GetGrads(layerI > 0 ? layerOuts[layerI - 1] : input, costs, activationFunction, out costs, out LayerVs layerGrads);
+                grads.Add(layerGrads);
+            }
+            return grads;
         }
 
         public enum CostFunctions
