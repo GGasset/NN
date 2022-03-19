@@ -9,7 +9,7 @@ namespace NN
 {
     public class NN
     {
-        List<Layer> layers;
+        internal List<Layer> layers;
 
         public NN(List<Layer> layers)
         {

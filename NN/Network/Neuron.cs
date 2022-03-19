@@ -20,5 +20,37 @@ namespace NN
 
             return Activation.Activate(output, activation);
         }
+
+
+        public static void GetGradients(double cost, double[] prevVs, double[] weigths, double bias, Activation.ActivationFunctions activation, out double[] weigthsGrads, out double[] prevActGrads, out double biasGrad)
+        {
+            if (prevVs.Length != weigths.Length)
+                throw new IndexOutOfRangeException();
+
+            double output = bias;
+            for (int i = 0; i < prevVs.Length; i++)
+                output += prevVs[i] * weigths[i];
+
+
+            cost *= Derivatives.DerivativeOf(output, activation);
+            biasGrad = cost;
+
+            weigthsGrads = new double[weigths.Length];
+            prevActGrads = new double[prevVs.Length];
+            for (int i = 0; i < prevVs.Length; i++)
+            {
+                weigthsGrads[i] = prevActGrads[i];
+                prevActGrads[i] = weigths[i];
+            }
+        }
+
+        static int rI = 0;
+        public static double GetRandomWeigth()
+        {
+            rI++;
+            Random r = new Random(rI);
+            bool isPositive = Convert.ToBoolean(Math.Round(r.NextDouble()));
+            return 1 + -2 * Convert.ToInt32(isPositive) + r.NextDouble() * r.Next(0, 3);
+        }
     }
 }

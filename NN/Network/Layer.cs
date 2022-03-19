@@ -9,6 +9,19 @@ namespace NN
 {
     public class Layer
     {
-        LayerVs vals;
+        public int Length => vals.Length;
+        internal LayerVs vals;
+
+        public double[] ExecuteLayer(double[] prevVs, Activation.ActivationFunctions activation)
+        {
+            double[] output = new double[Length];
+
+            for (int i = 0; i < Length; i++)
+                output[i] = Neuron.Execute(prevVs, vals[i], vals.bias, activation);
+
+            return output;
+        }
+
+
     }
 }
