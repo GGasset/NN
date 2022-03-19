@@ -33,7 +33,7 @@ namespace NN.Libraries
 
         internal void AddNeuron(double[] weigths, double biasAddition = 0)
         {
-            if (weigths.Length != PrevLayerLength)
+            if (weigths.Length != PrevLayerLength && this.weigths.Count > 0)
             {
                 throw new IndexOutOfRangeException();
             }

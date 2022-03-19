@@ -39,8 +39,8 @@ namespace NN
             prevActGrads = new double[prevVs.Length];
             for (int i = 0; i < prevVs.Length; i++)
             {
-                weigthsGrads[i] = prevActGrads[i];
-                prevActGrads[i] = weigths[i];
+                weigthsGrads[i] = prevActGrads[i] * cost;
+                prevActGrads[i] = weigths[i] * cost;
             }
         }
 

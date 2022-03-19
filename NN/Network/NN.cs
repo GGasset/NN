@@ -64,7 +64,7 @@ namespace NN
         {
             List<double[]> neuronActivations = ExecuteNetwork(input, out double[] output);
             if (expected.Length != output.Length)
-                throw new IndexOutOfRangeException("Expected Output Count is Incorrect");
+                throw new IndexOutOfRangeException("Expected output count is incorrect");
 
             double[] costs = new double[output.Length];
             for (int i = 0; i < output.Length; i++)
@@ -79,9 +79,18 @@ namespace NN
             for (int layerI = Length - 1; layerI >= 0; layerI--)
             {
                 layers[layerI].GetGrads(layerI > 0 ? layerOuts[layerI - 1] : input, costs, activationFunction, out costs, out LayerVs layerGrads);
-                grads.Add(layerGrads);
+                grads.Insert(0, layerGrads);
             }
             return grads;
+        }
+
+        public void SubtractGrads(List<LayerVs> Vs)
+        {
+            if (Vs.Count != Length)
+                throw new IndexOutOfRangeException();
+
+            for (int i = 0; i < Length; i++)
+                layers[i].Vs.SubtractVs(Vs[i]);
         }
 
         public enum CostFunctions
