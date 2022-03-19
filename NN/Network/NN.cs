@@ -9,23 +9,56 @@ namespace NN
 {
     public class NN
     {
+        public int inputLength => layers.Count > 0 ? layers[0].PrevLayerLength : 0;
         internal List<Layer> layers;
+        Activation.ActivationFunctions activationFunction;
 
         /// <param name="topology">neuronCount at each layer, this includes output</param>
-        public NN(int inputLength, int[] topology)
+        public NN(int inputLength, int[] topology, Activation.ActivationFunctions activationFunc)
         {
             layers = new List<Layer>();
             int currentPrevLength = inputLength;
+            activationFunction = activationFunc;
             for (int i = 0; i < topology.Length; i++)
             {
                 layers.Add(new Layer(topology[i], currentPrevLength));
                 currentPrevLength = topology[i];
             }
         }
-
-        public NN(List<Layer> layers)
+        public NN(List<Layer> layers, Activation.ActivationFunctions activationFunc)
         {
             this.layers = layers;
+            activationFunction = activationFunc;
+        }
+
+        public double[] ExecuteNetwork(double[] input)
+        {
+            ExecuteNetwork(input, out double[] output);
+            return output;
+        }
+
+        /// <param name="output">last layer of execution results</param>
+        /// <returns>All executions results</returns>
+        public List<double[]> ExecuteNetwork(double[] input, out double[] output)
+        {
+            List<double[]> outputs = new List<double[]>();
+            double[] prevLayerOuts = input;
+
+            for (int layerI = 0; layerI < layers.Count; layerI++)
+            {
+                outputs.Add(prevLayerOuts = layers[layerI].ExecuteLayer(prevLayerOuts, activationFunction));
+            }
+
+            output = outputs[layers.Count - 1];
+
+            if (outputs.Count != layers.Count)
+                throw new IndexOutOfRangeException();
+            return outputs;
+        }
+
+        public List<LayerVs> GetGradients(double[] input, double[] costs)
+        {
+
         }
 
         public enum CostFunctions
