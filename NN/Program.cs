@@ -35,7 +35,7 @@ namespace NN
             {
                 int trainingI = r.Next(0, X.Count);
                 List<LayerVs> Vs = n.GetSupervisedGrads(X[trainingI], Y[trainingI], NN.CostFunctions.SquaredMean);
-                n.SubtractGrads(Vs);
+                n.SubtractGrads(Vs, .1);
             }
 
             for (int x = 0; x < 10; x++)

@@ -41,7 +41,7 @@ namespace NN.Libraries
             bias += biasAddition;
         }
 
-        internal void SubtractVs(LayerVs layerVs)
+        internal void SubtractVs(LayerVs layerVs, double learningRate)
         {
             if (layerVs.weigths.Count != weigths.Count)
             {
@@ -57,17 +57,17 @@ namespace NN.Libraries
 
                 for (int l = 0; l < weigths[i].Length; l++)
                 {
-                    weigths[i][l] -= layerVs.weigths[i][l];
+                    weigths[i][l] -= layerVs.weigths[i][l] * learningRate;
                 }
             }
 
-            this.bias -= layerVs.bias;
+            this.bias -= layerVs.bias * learningRate;
         }
 
-        internal void SubtractVs(List<double[]> weigths, double bias)
+        internal void SubtractVs(List<double[]> weigths, double bias, double learningRate)
         {
             LayerVs toSubtract = new LayerVs(weigths, bias);
-            SubtractVs(toSubtract);
+            SubtractVs(toSubtract, learningRate);
         }
 
         public double[] this[int index] => weigths[index];

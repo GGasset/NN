@@ -84,13 +84,13 @@ namespace NN
             return grads;
         }
 
-        public void SubtractGrads(List<LayerVs> Vs)
+        public void SubtractGrads(List<LayerVs> Vs, double learningRate)
         {
             if (Vs.Count != Length)
                 throw new IndexOutOfRangeException();
 
             for (int i = 0; i < Length; i++)
-                layers[i].Vs.SubtractVs(Vs[i]);
+                layers[i].Vs.SubtractVs(Vs[i], learningRate);
         }
 
         public enum CostFunctions
