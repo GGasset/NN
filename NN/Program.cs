@@ -11,7 +11,7 @@ namespace NN
     {
         static void Main(string[] args)
         {
-            NN n = new NN(2, new int[] { 10, 7, 16, 1 }, Activation.ActivationFunctions.Sine);
+            NN n = new NN(2, new int[] { 3, 4, 4, 1 }, Activation.ActivationFunctions.Sine);
             List<double[]> X = new List<double[]>();
             List<double[]> Y = new List<double[]>();
             X.Add(new double[] { 0, 0 });
@@ -35,6 +35,8 @@ namespace NN
                 n.Supervisedbatch(X, Y, 5, .01, NN.CostFunctions.SquaredMean, out double averageCost);
                 //Console.WriteLine("Average Cost = " + averageCost);
             }
+
+            n = new NN(n.ToString());
 
             for (int x = 0; x < 5; x++)
             {

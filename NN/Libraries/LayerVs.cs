@@ -88,9 +88,9 @@ namespace NN.Libraries
         public LayerVs(string str)
         {
             string[] strs = str.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            this.bias = Convert.ToDouble(strs[1].Replace("bias: ", ""));
+            this.bias = Convert.ToDouble(strs[0].Replace("bias: ", ""));
             this.weigths = new List<double[]>();
-            for (int i = 2; i < strs.Length; i++)
+            for (int i = 1; i < strs.Length; i++)
             {
                 string[] weigthsStr = strs[i].Replace("neuron: ", "").Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries);
 

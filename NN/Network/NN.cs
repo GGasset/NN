@@ -124,6 +124,23 @@ namespace NN
                 layers[i].Vs.SubtractVs(Vs[i], learningRate);
         }
 
+        public override string ToString()
+        {
+            string str = "network:\n";
+            foreach (var layer in layers)
+                str += layer;
+            return str;
+        }
+
+        public NN(string str)
+        {
+            str = str.Replace("network:\n", "");
+            string[] layers = str.Split(new string[] {"layer:"}, StringSplitOptions.RemoveEmptyEntries);
+            this.layers = new List<Layer>();
+            foreach (var layer in layers)
+                this.layers.Add(new Layer(layer));
+        }
+
         public enum CostFunctions
         {
             SquaredMean,

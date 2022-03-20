@@ -45,6 +45,16 @@ namespace NN
             }
         }
 
+        public override string ToString()
+        {
+            return Vs.ToString();
+        }
+
+        public Layer(string str)
+        {
+            this.Vs = new LayerVs(str);
+        }
+
         public static double[] GetRandomWeigths(int count)
         {
             double[] output = new double[count];
