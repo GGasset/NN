@@ -18,6 +18,8 @@ namespace NN.Libraries
                     return TanhDerivative(neuronLinear);
                 case ActivationFunctions.Sine:
                     return SinDerivative(neuronLinear);
+                case ActivationFunctions.Ln:
+                    return LnDerivative(neuronLinear);
                 default:
                     throw new NotImplementedException();
             }
@@ -59,6 +61,8 @@ namespace NN.Libraries
         public static double TanhDerivative(double neuronActivation) => 1 - Math.Pow(Activation.TanhActivation(neuronActivation), 2);
 
         public static double SinDerivative(double neuronActivation) => Math.Cos(neuronActivation);
+
+        public static double LnDerivative(double neuronActivation) => 1 / neuronActivation;
 
         public static double MultiplicationDerivative(double a, double aDerivative, double b, double bDerivative) => a * aDerivative + b * bDerivative;
 
