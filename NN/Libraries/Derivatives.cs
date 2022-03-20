@@ -23,7 +23,7 @@ namespace NN.Libraries
             }
         }
 
-        /// <param name="expected">In case of Reinforcement learning expected is reward</param>
+        /// <param name="expected">In case of Reinforcement learning/logLikelyhood expected is reward</param>
         public static double DerivativeOf(double neuronActivation, double expected, CostFunctions costFunction)
         {
             if (double.IsNaN(expected))

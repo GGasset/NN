@@ -44,7 +44,7 @@ namespace NN
             }
         }
 
-        static int rI = 0;
+        internal static int rI = 0;
         public static double GetRandomWeigth()
         {
             rI++;

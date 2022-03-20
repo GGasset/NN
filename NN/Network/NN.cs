@@ -60,7 +60,37 @@ namespace NN
             return outputs;
         }
 
-        public List<LayerVs> GetSupervisedGrads(double[] input, double[] expected, CostFunctions costFunction)
+        public void Supervisedbatch(List<double[]> X, List<double[]> Y, int batchLength, double learningRate, CostFunctions costFunction, out double averageCost)
+        {
+            if (batchLength < 1)
+            {
+                averageCost = 0;
+                return;
+            }
+
+            if (X.Count != Y.Count)
+                throw new IndexOutOfRangeException();
+
+            List<List<LayerVs>> grads = new List<List<LayerVs>>();
+
+            Random r = new Random(Neuron.rI + DateTime.Now.Millisecond);
+            Neuron.rI++;
+            averageCost = 0;
+            for (int i = 0; i < batchLength; i++)
+            {
+                int trainingI = r.Next(X.Count);
+
+                grads.Add(GetSupervisedGrads(X[trainingI], Y[trainingI], costFunction, out double cost));
+                averageCost += cost;
+            }
+            averageCost /= batchLength;
+
+
+            foreach (var grad in grads)
+                SubtractGrads(grad, learningRate);
+        }
+
+        public List<LayerVs> GetSupervisedGrads(double[] input, double[] expected, CostFunctions costFunction, out double cost)
         {
             List<double[]> neuronActivations = ExecuteNetwork(input, out double[] output);
             if (expected.Length != output.Length)
@@ -69,6 +99,7 @@ namespace NN
             double[] costs = new double[output.Length];
             for (int i = 0; i < output.Length; i++)
                 costs[i] = Derivatives.DerivativeOf(output[i], expected[i], costFunction);
+            cost = Cost.GetCostOf(output, expected, costFunction);
 
             return GetGrads(input, neuronActivations, costs);
         }
