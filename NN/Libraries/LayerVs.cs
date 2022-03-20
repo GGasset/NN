@@ -61,13 +61,45 @@ namespace NN.Libraries
                 }
             }
 
-            this.bias -= layerVs.bias * learningRate;
+            bias -= layerVs.bias * learningRate;
         }
 
         internal void SubtractVs(List<double[]> weigths, double bias, double learningRate)
         {
             LayerVs toSubtract = new LayerVs(weigths, bias);
             SubtractVs(toSubtract, learningRate);
+        }
+
+        public override string ToString()
+        {
+            string str = $"layer:\nbias: {bias}\n";
+            foreach (var weigthArr in weigths)
+            {
+                str += "neuron: ";
+                foreach (var weigth in weigthArr)
+                {
+                    str += $"{weigth} ";
+                }
+                str += "\n";
+            }
+            return str;
+        }
+
+        public LayerVs(string str)
+        {
+            string[] strs = str.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            this.bias = Convert.ToDouble(strs[1].Replace("bias: ", ""));
+            this.weigths = new List<double[]>();
+            for (int i = 2; i < strs.Length; i++)
+            {
+                string[] weigthsStr = strs[i].Replace("neuron: ", "").Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+
+                double[] weigths = new double[weigthsStr.Length];
+                for (int weigthI = 0; weigthI < weigths.Length; weigthI++)
+                    weigths[weigthI] = Convert.ToDouble(weigthsStr[weigthI]);
+
+                AddNeuron(weigths);
+            }
         }
 
         public double[] this[int index] => weigths[index];

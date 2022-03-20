@@ -32,7 +32,7 @@ namespace NN
 
             for (int i = 0; i < 10000; i++)
             {
-                n.Supervisedbatch(X, Y, 1, .01, NN.CostFunctions.SquaredMean, out double averageCost);
+                n.Supervisedbatch(X, Y, 5, .01, NN.CostFunctions.SquaredMean, out double averageCost);
                 //Console.WriteLine("Average Cost = " + averageCost);
             }
 

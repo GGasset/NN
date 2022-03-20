@@ -50,6 +50,7 @@
     <Compile Include="Libraries\LayerVs.cs" />
     <Compile Include="Network\Neuron.cs" />
     <Compile Include="Network\NN.cs" />
+    <Compile Include="Network\ReinforcementAgent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
