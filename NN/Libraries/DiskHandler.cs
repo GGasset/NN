@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 
-namespace NeuronalNetwork.Libraries
+namespace NN.Libraries
 {
     public static class DiskHandler
     {
