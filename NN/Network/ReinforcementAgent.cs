@@ -28,6 +28,16 @@ namespace NN
             this.learningRate = learningRate;
         }
 
+        public ReinforcementAgent(string str, double learningRate)
+        {
+            this.learningRate=learningRate;
+            reward = 0;
+            rewards = new List<double>();
+            inputs = new List<double[]>();
+            neuronActivations = new List<List<double[]>>();
+            n = new NN(str);
+        }
+
         public double[] ExecuteAgent(double[] input)
         {
             rewards.Add(reward);
