@@ -126,7 +126,7 @@ namespace NN
 
         public override string ToString()
         {
-            string str = "network:\n";
+            string str = "network:\nActivationFunction: " + activationFunction + "\n";
             foreach (var layer in layers)
                 str += layer;
             return str;
@@ -135,6 +135,10 @@ namespace NN
         public NN(string str)
         {
             str = str.Replace("network:\n", "");
+
+            activationFunction = (Activation.ActivationFunctions)Enum.Parse(typeof(Activation.ActivationFunctions), str.Remove(str.IndexOf("\n")).Replace("ActivationFunction: ", ""));
+
+            str = str.Remove(0, str.IndexOf("\n") + 1);
             string[] layers = str.Split(new string[] {"layer:"}, StringSplitOptions.RemoveEmptyEntries);
             this.layers = new List<Layer>();
             foreach (var layer in layers)

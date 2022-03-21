@@ -26,13 +26,13 @@ namespace NN
             X.Add(new double[] { 0, 1 });
             Y.Add(new double[] { -1 });
 
-            X.Add(new double[] { .5, .5 });
-            Y.Add(new double[] { 0 });
+            /*X.Add(new double[] { .5, .5 });
+            Y.Add(new double[] { 0 });*/
 
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 100000; i++)
             {
-                n.Supervisedbatch(X, Y, 5, .01, NN.CostFunctions.SquaredMean, out double averageCost);
+                n.Supervisedbatch(X, Y, 10, .01, NN.CostFunctions.SquaredMean, out double averageCost);
                 //Console.WriteLine("Average Cost = " + averageCost);
             }
 
