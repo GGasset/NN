@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using NN.Libraries;
 using static NN.Libraries.Activation;
 
-namespace NN.Network
+namespace NN
 {
     public class ReinforcementAgent
     {
