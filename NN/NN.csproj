@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Libraries\Cost.cs" />
+    <Compile Include="Libraries\DiskHandler.cs" />
     <Compile Include="Network\Layer.cs" />
     <Compile Include="Libraries\Activation.cs" />
     <Compile Include="Libraries\Derivatives.cs" />
