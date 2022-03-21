@@ -11,7 +11,7 @@ namespace NN
 {
     public class ReinforcementAgent
     {
-        NN n;
+        public NN n;
         List<double[]> inputs;
         List<List<double[]>> neuronActivations;
         List<double> rewards;
