@@ -17,8 +17,9 @@ namespace NN
             double output = bias;
             for (int i = 0; i < prevVs.Length; i++)
                 output += prevVs[i] * weigths[i];
+            output = Activation.Activate(output, activation);
 
-            return Activation.Activate(output, activation);
+            return output;
         }
 
 
@@ -39,7 +40,7 @@ namespace NN
             prevActGrads = new double[prevVs.Length];
             for (int i = 0; i < prevVs.Length; i++)
             {
-                weigthsGrads[i] = prevActGrads[i] * cost;
+                weigthsGrads[i] = prevVs[i] * cost;
                 prevActGrads[i] = weigths[i] * cost;
             }
         }

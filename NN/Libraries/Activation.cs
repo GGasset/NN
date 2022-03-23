@@ -33,7 +33,7 @@ namespace NN.Libraries
                 case ActivationFunctions.GELU:
                     return GELUActivation(input);
                 case ActivationFunctions.Ln:
-                    return Math.Log(input, Math.E);
+                    return Math.Log(input);
                 default:
                     throw new NotImplementedException();
             }

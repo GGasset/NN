@@ -55,8 +55,6 @@ namespace NN
 
             output = outputs[layers.Count - 1];
 
-            if (outputs.Count != layers.Count)
-                throw new IndexOutOfRangeException();
             return outputs;
         }
 

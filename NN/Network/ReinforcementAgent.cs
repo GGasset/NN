@@ -14,7 +14,7 @@ namespace NN
         public NN n;
         List<double[]> inputs;
         List<List<double[]>> neuronActivations;
-        List<double> rewards;
+        public List<double> rewards;
         double reward;
         double learningRate;
 
