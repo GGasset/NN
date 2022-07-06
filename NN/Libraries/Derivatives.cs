@@ -19,7 +19,7 @@ namespace NN.Libraries
             return costGrads;
         }
 
-        /// <param name="expected">In case of Reinforcement learning expected is reward</param>
+        /// <param name="expected">In case of Reinforcement learning/logLikelyhood expected is reward</param>
         public static double DerivativeOf(double neuronActivation, double expected, CostFunctions costFunction)
         {
             if (double.IsNaN(expected))
@@ -73,6 +73,8 @@ namespace NN.Libraries
         public static double TanhDerivative(double neuronActivation) => 1 - Math.Pow(Activation.TanhActivation(neuronActivation), 2);
 
         public static double SinDerivative(double neuronActivation) => Math.Cos(neuronActivation);
+
+        public static double LnDerivative(double neuronActivation) => 1 / neuronActivation;
 
         public static double MultiplicationDerivative(double a, double aDerivative, double b, double bDerivative) => a * aDerivative + b * bDerivative;
 

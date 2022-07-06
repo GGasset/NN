@@ -1,16 +1,24 @@
 ﻿using NN.Libraries;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NN
 {
     public class Layer
     {
-        public int Length => vals.Length;
-        internal LayerVs vals;
+        public int Length => Vs.Length;
+        public int PrevLayerLength => Vs.PrevLayerLength;
+        public double bias => Vs.bias;
+        internal LayerVs Vs;
+
+        public Layer(int neuronCount, int prevLength, double bias = 1)
+        {
+            Vs = new LayerVs(neuronCount, prevLength, bias);
+        }
+
+        public Layer(LayerVs vals)
+        {
+            Vs = vals;
+        }
 
         public Layer(LayerVs values)
         {

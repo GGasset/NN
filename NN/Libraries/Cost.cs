@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static NN.NN;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace NN.Libraries
         }
 
         public static double GetCost(double[] networkOutput, double[] expected, CostFunctions costFunction)
-        {
+            {
             double output = 0;
             for (int i = 0; i < networkOutput.Length; i++)
             {

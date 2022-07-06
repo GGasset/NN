@@ -9,12 +9,25 @@ namespace NN
 {
     public class NN
     {
+        public int Length => layers.Count;
+        public int inputLength => layers.Count > 0 ? layers[0].PrevLayerLength : 0;
         internal List<Layer> layers;
         public int Length => layers.Count;
         public int InputLength => layers[0].vals.weigths.Count;
         private readonly Activation.ActivationFunctions ActivationFunction;
 
         public NN(List<Layer> layers, Activation.ActivationFunctions activationFunction)
+        {
+            layers = new List<Layer>();
+            int currentPrevLength = inputLength;
+            activationFunction = activationFunc;
+            for (int i = 0; i < topology.Length; i++)
+            {
+                layers.Add(new Layer(topology[i], currentPrevLength));
+                currentPrevLength = topology[i];
+            }
+        }
+        public NN(List<Layer> layers, Activation.ActivationFunctions activationFunc)
         {
             this.layers = layers;
             ActivationFunction = activationFunction;

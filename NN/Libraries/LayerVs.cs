@@ -14,17 +14,20 @@ namespace NN.Libraries
         internal double[] bias;
         internal List<double[]> weigths;
 
-        public LayerVs(List<double[]> weigths, double[] bias)
+        public LayerVs(List<double[]> weigths, double bias = 0)
         {
             this.bias = bias;
-            this.weigths = weigths;
+            if (weigths == null)
+            {
+                weigths = new List<double[]>();
+            }
+            else
+                this.weigths = weigths;
         }
 
-        public LayerVs(int length, int previousLayerLength, double defaultBias, double minWeight, double maxWeight)
+        internal void SubtractVs(LayerVs layerVs)
         {
-            bias = new double[length];
-            weigths = new List<double[]>();
-            for (int i = 0; i < length; i++)
+            if (layerVs.weigths.Count != weigths.Count)
             {
                 bias[i] = defaultBias;
                 weigths.Add(new double[previousLayerLength]);
@@ -45,16 +48,13 @@ namespace NN.Libraries
                 }
             }
 
-            for (int i = 0; i < Length; i++)
-            {
-                this.bias[i] -= layerVs.bias[i] * learningRate;
+                for (int l = 0; l < weigths[i].Length; l++)
+                {
+                    weigths[i][l] -= layerVs.weigths[i][l];
+                }
             }
-        }
 
-        internal void SubtractVs(List<double[]> weigths, double[] bias, double learningRate)
-        {
-            LayerVs toSubtract = new LayerVs(weigths, bias);
-            SubtractVs(toSubtract, learningRate);
+            this.bias -= layerVs.bias;
         }
 
         private static int randomI = 1;

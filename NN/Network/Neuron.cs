@@ -15,7 +15,7 @@ namespace NN
                 output += prevVs[i] * weigths[i];
             linearFunction = output;
             output += bias;
-            return Activation.Activate(output, activation);
+            return output;
         }
 
 
