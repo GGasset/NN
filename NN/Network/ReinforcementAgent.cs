@@ -15,9 +15,9 @@ namespace NN
         List<double[]> inputs;
         List<List<double[]>> neuronActivations;
         List<List<double[]>> neuronLinears;
-        public List<double> rewards;
-        double reward;
-        double learningRate;
+        internal List<double> rewards;
+        internal double reward;
+        internal double learningRate;
 
         public ReinforcementAgent(int inputLength, int[] topology, double learningRate, ActivationFunctions activation)
         {
@@ -31,7 +31,7 @@ namespace NN
 
         public ReinforcementAgent(string str, double learningRate)
         {
-            this.learningRate=learningRate;
+            this.learningRate = learningRate;
             reward = 0;
             rewards = new List<double>();
             inputs = new List<double[]>();
@@ -39,27 +39,29 @@ namespace NN
             n = new NN(str);
         }
 
-        public double[] ExecuteAgent(double[] input)
+        internal double[] ExecuteAgent(double[] input)
         {
             rewards.Add(reward);
             inputs.Add(input);
-            neuronActivations.Add(n.ExecuteNetwork(input, out double[] output));
+            double[] output = n.ExecuteNetwork(input, out List<double[]> linears, out List<double[]> neuronOutputs);
+            neuronLinears.Add(linears);
+            neuronActivations.Add(neuronOutputs);
             return output;
         }
 
-        public void TerminateAgent()
+        internal void TerminateAgent()
         {
             List<List<LayerVs>> grads = new List<List<LayerVs>>();
             for (int t = 0; t < inputs.Count; t++)
             {
-                int outputLength = neuronActivations[t][neuronActivations[t].Count - 1].Length;
+                int outputLength = n.layers[n.layers.Count - 1].Length;
                 double[] costs = new double[outputLength];
                 for (int outputI = 0; outputI < outputLength; outputI++)
                 {
                     double[] output = neuronActivations[t][neuronActivations[t].Count - 1];
                     costs[outputI] = Derivatives.LogLikelyhoodTermDerivative(output[outputI], rewards[t]);
                 }
-               grads.Add(n.GetGrads(inputs[t], neuronActivations[t], costs));
+                grads.Add(n.GetGradients(costs, inputs[t], neuronLinears[t], neuronActivations[t]));
             }
 
             foreach (var grad in grads)
@@ -69,14 +71,20 @@ namespace NN
             rewards = new List<double>();
             inputs = new List<double[]>();
             neuronActivations = new List<List<double[]>>();
+            neuronLinears = new List<List<double[]>>();
         }
 
-        public void GiveReward(double reward)
+        internal void GiveReward(double reward)
         {
             this.reward += reward;
         }
 
-        public void ChangeLastReward(double reward)
+        internal void AddToLastReward(double reward)
+        {
+            rewards[rewards.Count - 1] += reward;
+        }
+
+        internal void ChangeLastReward(double reward)
         {
             rewards[rewards.Count - 1] = reward;
         }
