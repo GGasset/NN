@@ -11,47 +11,61 @@ namespace NN.Libraries
         public int Length => weigths.Count;
         public int PrevLayerLength => weigths.Count > 0? weigths[0].Length : 0;
 
-        internal double bias;
+        internal double[] bias;
         internal List<double[]> weigths;
 
-        public LayerVs(List<double[]> weigths, double bias = 0)
+        public LayerVs(List<double[]> weigths, double[] bias)
         {
             this.bias = bias;
-            if (weigths == null)
-            {
-                weigths = new List<double[]>();
-            }
-            else
-                this.weigths = weigths;
+            this.weigths = weigths;
         }
 
-        internal void SubtractVs(LayerVs layerVs)
+        public LayerVs(int length, int previousLayerLength, double defaultBias, double minWeight, double maxWeight)
         {
-            if (layerVs.weigths.Count != weigths.Count)
+            bias = new double[length];
+            weigths = new List<double[]>();
+            for (int i = 0; i < length; i++)
             {
-                throw new IndexOutOfRangeException();
-            }
-
-            for (int i = 0; i < weigths.Count; i++)
-            {
-                if (weigths[i].Length != layerVs.weigths[i].Length)
+                bias[i] = defaultBias;
+                weigths.Add(new double[previousLayerLength]);
+                for (int j = 0; j < previousLayerLength; j++)
                 {
-                    throw new IndexOutOfRangeException();
-                }
-
-                for (int l = 0; l < weigths[i].Length; l++)
-                {
-                    weigths[i][l] -= layerVs.weigths[i][l];
+                    weigths[i][j] = GenerateWeight(minWeight, maxWeight);
                 }
             }
-
-            this.bias -= layerVs.bias;
         }
 
-        internal void SubtractVs(List<double[]> weigths, double bias)
+        internal void SubtractVs(LayerVs layerVs, double learningRate)
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                for (int j = 0; j < weigths[i].Length; j++)
+                {
+                    weigths[i][j] -= layerVs.weigths[i][j] * learningRate;
+                }
+            }
+
+            for (int i = 0; i < Length; i++)
+            {
+                this.bias[i] -= layerVs.bias[i] * learningRate;
+            }
+        }
+
+        internal void SubtractVs(List<double[]> weigths, double[] bias, double learningRate)
         {
             LayerVs toSubtract = new LayerVs(weigths, bias);
-            SubtractVs(toSubtract);
+            SubtractVs(toSubtract, learningRate);
+        }
+
+        private static int randomI = 1;
+        internal double GenerateWeight(double minValue, double maxValue)
+        {
+            Random r = new Random(DateTime.Now.Millisecond + randomI);
+            randomI++;
+            double output = r.NextDouble() * (maxValue - minValue) - minValue;
+            if (output == 0)
+                output = GenerateWeight(minValue, maxValue);
+            return output;
         }
 
         public double[] this[int index] => weigths[index];

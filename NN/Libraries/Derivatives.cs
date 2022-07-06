@@ -1,26 +1,22 @@
 ﻿using System;
-using static NN.NN;
+using static NN.Libraries.Cost;
 using static NN.Libraries.Activation;
 
 namespace NN.Libraries
 {
     public static class Derivatives
     {
-        public static double DerivativeOf(double neuronLinear, ActivationFunctions activation)
+
+        /// <summary>
+        /// This function is used for supervised learning only
+        /// </summary>
+        public static double[] DerivativeOf(double[] output, double[] label, CostFunctions costFunction)
         {
-            switch (activation)
-            {
-                case ActivationFunctions.Relu:
-                    return ReluDerivative(neuronLinear);
-                case ActivationFunctions.Sigmoid:
-                    return SigmoidDerivative(neuronLinear);
-                case ActivationFunctions.Tanh:
-                    return TanhDerivative(neuronLinear);
-                case ActivationFunctions.Sine:
-                    return SinDerivative(neuronLinear);
-                default:
-                    throw new NotImplementedException();
-            }
+            double[] costGrads = new double[label.Length];
+            for (int i = 0; i < label.Length; i++)
+                costGrads[i] = DerivativeOf(output[i], label[i], costFunction);
+
+            return costGrads;
         }
 
         /// <param name="expected">In case of Reinforcement learning expected is reward</param>
@@ -45,9 +41,27 @@ namespace NN.Libraries
 
         public static double LogLikelyhoodTermDerivative(double output, double reward) => -(1 / output * Math.Log(10)) * -Math.Log10(output) + reward;
 
-        public static double SquaredMeanErrorDerivative(double neuronOutput, double expectedOutput) => 2 * (neuronOutput - expectedOutput);
+        public static double SquaredMeanErrorDerivative(double neuronOutput, double expectedOutput) => -2 * (neuronOutput - expectedOutput);
 
         //public static double BinaryCrossEntropyDerivative(double neuronOutput, double expectedOutput) =>  /
+
+
+        public static double DerivativeOf(double neuronLinear, ActivationFunctions activation)
+        {
+            switch (activation)
+            {
+                case ActivationFunctions.Relu:
+                    return ReluDerivative(neuronLinear);
+                case ActivationFunctions.Sigmoid:
+                    return SigmoidDerivative(neuronLinear);
+                case ActivationFunctions.Tanh:
+                    return TanhDerivative(neuronLinear);
+                case ActivationFunctions.Sine:
+                    return SinDerivative(neuronLinear);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
 
         public static double SigmoidDerivative(double neuronActivation) => Activation.SigmoidActivation(neuronActivation) * (1 - SigmoidDerivative(neuronActivation));
 

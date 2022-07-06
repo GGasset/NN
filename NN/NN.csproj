@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Libraries\Cost.cs" />
     <Compile Include="Network\Layer.cs" />
     <Compile Include="Libraries\Activation.cs" />
     <Compile Include="Libraries\Derivatives.cs" />
