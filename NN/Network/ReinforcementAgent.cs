@@ -14,6 +14,7 @@ namespace NN
         public NN n;
         List<double[]> inputs;
         List<List<double[]>> neuronActivations;
+        List<List<double[]>> neuronLinears;
         public List<double> rewards;
         double reward;
         double learningRate;
@@ -73,6 +74,11 @@ namespace NN
         public void GiveReward(double reward)
         {
             this.reward += reward;
+        }
+
+        public void ChangeLastReward(double reward)
+        {
+            rewards[rewards.Count - 1] = reward;
         }
     }
 }

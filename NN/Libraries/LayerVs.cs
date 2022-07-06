@@ -8,13 +8,13 @@ namespace NN.Libraries
 {
     public class LayerVs
     {
-        public int Length => weigths.Count;
-        public int PrevLayerLength => weigths.Count > 0? weigths[0].Length : 0;
+        public int Length => weights.Count;
+        public int previousLayerLength => weights.Count > 0? weights[0].Length : 0;
 
         internal double[] bias;
-        internal List<double[]> weigths;
+        internal List<double[]> weights;
 
-        public LayerVs(List<double[]> weigths, double bias = 0)
+        public LayerVs(List<double[]> weigths, double[] bias)
         {
             this.bias = bias;
             if (weigths == null)
@@ -22,18 +22,20 @@ namespace NN.Libraries
                 weigths = new List<double[]>();
             }
             else
-                this.weigths = weigths;
+                this.weights = weigths;
         }
 
-        internal void SubtractVs(LayerVs layerVs)
+        public LayerVs(int length, int prevLayerLength, double defaultBias = 1, double minWeight = -1.5, double maxWeight = 1.5)
         {
-            if (layerVs.weigths.Count != weigths.Count)
+            bias = new double[length];
+            weights = new List<double[]>();
+            for (int i = 0; i < length; i++)
             {
                 bias[i] = defaultBias;
-                weigths.Add(new double[previousLayerLength]);
-                for (int j = 0; j < previousLayerLength; j++)
+                weights.Add(new double[prevLayerLength]);
+                for (int j = 0; j < prevLayerLength; j++)
                 {
-                    weigths[i][j] = GenerateWeight(minWeight, maxWeight);
+                    weights[i][j] = GenerateWeight(minWeight, maxWeight);
                 }
             }
         }
@@ -42,19 +44,15 @@ namespace NN.Libraries
         {
             for (int i = 0; i < Length; i++)
             {
-                for (int j = 0; j < weigths[i].Length; j++)
+                for (int j = 0; j < weights[i].Length; j++)
                 {
-                    weigths[i][j] -= layerVs.weigths[i][j] * learningRate;
+                    weights[i][j] -= layerVs.weights[i][j] * learningRate;
                 }
             }
-
-                for (int l = 0; l < weigths[i].Length; l++)
-                {
-                    weigths[i][l] -= layerVs.weigths[i][l];
-                }
+            for (int i = 0; i < Length; i++)
+            {
+                bias[i] -= layerVs.bias[i];
             }
-
-            this.bias -= layerVs.bias;
         }
 
         private static int randomI = 1;
@@ -68,6 +66,56 @@ namespace NN.Libraries
             return output;
         }
 
-        public double[] this[int index] => weigths[index];
+        public LayerVs(string str)
+        {
+            string[] biasWeightsStrs = str.Split(new string[] { "/" }, StringSplitOptions.None);
+            string biasStr = biasWeightsStrs[0];
+
+            string[] biasStrs = biasStr.Split(new string[] { "," }, StringSplitOptions.None);
+            
+            bias = new double[biasStrs.Length];
+            for (int i = 0; i < biasStrs.Length; i++)
+            {
+                bias[i] = Convert.ToDouble(biasStrs[i]);
+            }
+
+            string networkWeightStr = biasWeightsStrs[1];
+            string[] layerWeightStrs = networkWeightStr.Split(new string[] { "|" }, StringSplitOptions.None);
+
+            weights = new List<double[]>();
+            for (int i = 0; i < layerWeightStrs.Length; i++)
+            {
+                string[] neuronWeightstrs = layerWeightStrs[i].Split(new string[] { "," }, StringSplitOptions.None);
+                weights.Add(new double[neuronWeightstrs.Length]);
+                for (int j = 0; j < neuronWeightstrs.Length; j++)
+                {
+                    weights[i][j] = Convert.ToDouble(neuronWeightstrs[j]);
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+            foreach (var bias in bias)
+            {
+                output += $"{bias},";
+            }
+            output = output.Remove(output.Length - 1);
+            output += "/";
+            foreach (var neuronWeights in weights)
+            {
+                foreach (var weight in neuronWeights)
+                {
+                    output += $"{weight},";
+                }
+                output = output.Remove(output.Length - 1);
+                output += "|";
+            }
+            output = output.Remove(output.Length - 1);
+            return output;
+        }
+
+        public double[] this[int index] => weights[index];
     }
 }

@@ -9,25 +9,12 @@ namespace NN
 {
     public class NN
     {
-        public int Length => layers.Count;
-        public int inputLength => layers.Count > 0 ? layers[0].PrevLayerLength : 0;
         internal List<Layer> layers;
         public int Length => layers.Count;
-        public int InputLength => layers[0].vals.weigths.Count;
+        public int InputLength => layers[0].vals.weights.Count;
         private readonly Activation.ActivationFunctions ActivationFunction;
 
         public NN(List<Layer> layers, Activation.ActivationFunctions activationFunction)
-        {
-            layers = new List<Layer>();
-            int currentPrevLength = inputLength;
-            activationFunction = activationFunc;
-            for (int i = 0; i < topology.Length; i++)
-            {
-                layers.Add(new Layer(topology[i], currentPrevLength));
-                currentPrevLength = topology[i];
-            }
-        }
-        public NN(List<Layer> layers, Activation.ActivationFunctions activationFunc)
         {
             this.layers = layers;
             ActivationFunction = activationFunction;
@@ -43,6 +30,8 @@ namespace NN
                 layers.Add(new Layer(lengths[i], previousLayerLength, defaultBias, minWeight, maxWeight));
             }
         }
+
+        public double[] ExecuteNetwork(double[] input) => ExecuteNetwork(input, out _, out _);
 
         public double[] ExecuteNetwork(double[] input, out List<double[]> linearFunctions, out List<double[]> neuronOutputs)
         {
@@ -83,6 +72,7 @@ namespace NN
                 costGrads = prevActivationGrads;
                 outputGradients.Add(new LayerVs(weightGrads, biasGrads));
             }
+            outputGradients.Reverse();
             return outputGradients;
         }
 
@@ -90,6 +80,26 @@ namespace NN
         {
             for (int i = 0; i < Length; i++)
                 layers[i].vals.SubtractVs(grads[i], learningRate);
+        }
+
+        public NN(string str)
+        {
+            string[] layersStr = str.Split(new char[] { '\n' });
+            foreach (var layerStr in layersStr)
+            {
+                layers.Add(new Layer(layerStr));
+            }
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+            foreach (var layer in layers)
+            {
+                output += layer.ToString() + "\n";
+            }
+            output.Remove(output.Length - 1);
+            return output;
         }
     }
 }

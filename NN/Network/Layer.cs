@@ -5,24 +5,13 @@ namespace NN
 {
     public class Layer
     {
-        public int Length => Vs.Length;
-        public int PrevLayerLength => Vs.PrevLayerLength;
-        public double bias => Vs.bias;
-        internal LayerVs Vs;
-
-        public Layer(int neuronCount, int prevLength, double bias = 1)
-        {
-            Vs = new LayerVs(neuronCount, prevLength, bias);
-        }
+        public int Length => vals.Length;
+        public int PrevLayerLength => vals.previousLayerLength;
+        internal LayerVs vals;
 
         public Layer(LayerVs vals)
         {
-            Vs = vals;
-        }
-
-        public Layer(LayerVs values)
-        {
-            vals = values;
+            this.vals = vals;
         }
 
         public Layer(int length, int previousLayerLength, double defaultBias, double minWeight, double maxWeight)
@@ -51,7 +40,7 @@ namespace NN
             
             for (int i = 0; i < Length; i++)
             {
-                Neuron.GetGradients(costs[i], prevVs, vals.weigths[i], vals.bias[i], activationFunction, linearFunctions[i], out double[] neuronWeightGrads, out double[] currentPrevActivationsGrads, out double biasGrad);
+                Neuron.GetGradients(costs[i], prevVs, vals.weights[i], vals.bias[i], activationFunction, linearFunctions[i], out double[] neuronWeightGrads, out double[] currentPrevActivationsGrads, out double biasGrad);
                 weightGrads.Add(neuronWeightGrads);
                 biasGrads[i] = biasGrad;
 
@@ -60,6 +49,16 @@ namespace NN
                     prevActivationGrads[j] += currentPrevActivationsGrads[j];
                 }
             }
+        }
+
+        public Layer(string str)
+        {
+            this.vals = new LayerVs(str);
+        }
+
+        public override string ToString()
+        {
+            return vals.ToString();
         }
     }
 }
